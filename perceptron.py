@@ -11,7 +11,31 @@ x2 = rng.randn(N, d) + np.array([mean, mean])
 
 x = np.concatenate((x1, x2), axis=0)
 
-# import matplotlib.pyplot as plt
-# 
-# plt.plot(x1, x2, 'o')
-# plt.show()
+w = np.zeros(d)
+b = 0
+
+def y(x):
+    return step(np.dot(w, x) + b)
+
+def step(x):
+    return 1 * (x > 0)
+
+def t(i):
+    if i < N:
+        return 0
+    else:
+        return 1
+
+while True:
+    classified = True
+    for i in range(N * 2):
+        delta_w = (t(i) - y(x[i])) * x[i]
+        delta_b = (t(i) - y(x[i]))
+        w += delta_w
+        b += delta_b
+        classified *= all(delta_w == 0) * (delta_b == 0)
+    if classified:
+        break
+
+from IPython import embed
+embed()
