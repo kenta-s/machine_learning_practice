@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from IPython import embed
 
 rng = np.random.RandomState(123)
 
@@ -37,5 +39,4 @@ while True:
     if classified:
         break
 
-from IPython import embed
 embed()
