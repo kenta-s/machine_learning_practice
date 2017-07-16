@@ -31,3 +31,11 @@ classified = correct_prediction.eval(session=sess, feed_dict={
 })
 print(classified)
 
+prob = y.eval(session=sess, feed_dict={
+    x: X,
+    t: Y
+})
+print(prob)
+
+print('w:', sess.run(w))
+print('b:', sess.run(b))
