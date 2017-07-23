@@ -1,0 +1,50 @@
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense, Activation
+from keras.layers.core import Dropout
+from keras.optimizers import Adam
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+mnist = datasets.fetch_mldata('MNIST original', data_home='.')
+
+n = len(mnist.data)
+N = 10000
+indices = np.random.permutation(range(n))[:N]
+X = mnist.data[indices]
+y = mnist.target[indices]
+Y = np.eye(10)[y.astype(int)]
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, train_size=0.8)
+
+n_in = len(X[0])
+n_hidden = 200
+n_out = len(Y[0])
+
+model = Sequential()
+model.add(Dense(n_hidden, input_dim=n_in))
+model.add(Activation('tanh'))
+
+model.add(Dense(n_hidden))
+model.add(Activation('tanh'))
+model.add(Dropout(0.5))
+
+model.add(Dense(n_hidden))
+model.add(Activation('tanh'))
+
+model.add(Dense(n_hidden))
+model.add(Activation('tanh'))
+
+model.add(Dense(n_out))
+model.add(Activation('softmax'))
+
+model.compile(loss='categorical_crossentropy',
+        optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999),
+        metrics=['accuracy'])
+
+epochs = 1000
+batch_size = 100
+
+model.fit(X_train, Y_train, epochs=epochs, batch_size=batch_size)
+
+loss_and_metrics = model.evaluate(X_test, Y_test)
+print(loss_and_metrics)
